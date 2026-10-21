@@ -72,23 +72,23 @@ HYPOTHESES = [
 ]
 
 POWER_BI_MANIFEST = {
-    "status": "integration-ready",
+    "status": "complete",
     "project_name": "Bike Sharing Dashboard",
     "repository_url": "https://github.com/Ganesh2006646/foundations-of-data-science/tree/main/review%20-2/power_bi_dashboard",
     "project_file_url": "https://github.com/Ganesh2006646/foundations-of-data-science/blob/main/review%20-2/power_bi_dashboard/Bike_Sharing_Dashboard.pbip",
     "semantic_model_url": "https://github.com/Ganesh2006646/foundations-of-data-science/blob/main/review%20-2/power_bi_dashboard/Bike_Sharing_Dashboard.SemanticModel/model.bim",
     "dax_library_url": "https://github.com/Ganesh2006646/foundations-of-data-science/blob/main/review%20-2/power_bi_dashboard/DAX_Measures.dax",
     "tables": ["Daily_Analytics", "Hourly_Analytics", "ML_Predictions", "Key_Measures"],
-    "semantic_measures": 12,
+    "semantic_measures": 23,
     "dax_library_measures": 23,
     "report_pages": 4,
-    "native_visuals": 0,
+    "native_visuals": 35,
     "feeds": {
         "daily": "/api/powerbi/daily.csv",
         "hourly": "/api/powerbi/hourly.csv",
         "predictions": "/api/powerbi/predictions.csv"
     },
-    "note": "Backend feeds and the semantic project are available. Replace the PBIP's local File.Contents sources with the web feeds, then author the native report visuals in Power BI Desktop."
+    "note": "The portable PBIP includes four completed report pages, 35 native visuals, reusable DAX measures, and public refreshable CSV sources."
 }
 
 

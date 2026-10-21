@@ -72,7 +72,7 @@ D:\fods\
   3. Formulated **7 operational decisions** for fleet allocation and dock rebalancing
   4. **6 Formal Hypothesis Tests** (Welch's $t$-test, One-way ANOVA, Pearson correlation, Chi-square test of independence)
   5. **Supervised Regression ML Validation** (Random Forest Regressor achieving $R^2 \approx 0.89$, MAE $\approx 439$ bikes)
-  6. **Interactive Dashboard Integration:** Full-stack analytics dashboard plus a native Power BI (`.pbip`) project with semantic model and DAX measures
+  6. **Interactive Dashboard Integration:** Full-stack analytics dashboard plus a portable native Power BI (`.pbip`) project with 4 completed pages, 35 native visuals, and 23 semantic measures
   7. **Deliverables:**
      - Notebook: [`review -2/Bike_Sharing_Case_Study.ipynb`](review%20-2/Bike_Sharing_Case_Study.ipynb)
      - Full-Stack Dashboard: [`review -2/dashboard/`](review%20-2/dashboard/)

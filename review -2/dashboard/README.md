@@ -39,7 +39,7 @@ The daily and hourly APIs accept `year`, `season`, `weather`, and `day_type` que
 http://127.0.0.1:8000/api/bi/daily.csv?year=2012&season=Fall
 ```
 
-In Power BI Desktop, choose **Get Data → Web**, paste an endpoint URL, and select **Load**. In Tableau Desktop, use the text/CSV connector with the downloaded endpoint result or a web-data connector workflow.
+The included Power BI project already uses portable public CSV sources and contains four completed pages with 35 native visuals. Open `review -2/power_bi_dashboard/Bike_Sharing_Dashboard.pbip` in Power BI Desktop and refresh. For a custom report, choose **Get Data → Web**, paste an endpoint URL, and select **Load**. In Tableau Desktop, use the text/CSV connector with the downloaded endpoint result or a web-data connector workflow.
 
 ## Scope
 

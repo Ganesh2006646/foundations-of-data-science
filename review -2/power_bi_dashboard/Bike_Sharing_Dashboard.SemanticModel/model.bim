@@ -105,7 +105,7 @@
               "type": "m",
               "expression": [
                 "let",
-                "    Source = Csv.Document(File.Contents(\"D:\\\\fods\\\\review -2\\\\dashboard_exports\\\\bike_sharing_daily_processed.csv\"), [Delimiter=\",\", Columns=15, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    Source = Csv.Document(Web.Contents(\"https://raw.githubusercontent.com/Ganesh2006646/foundations-of-data-science/main/review%20-2/dashboard_exports/bike_sharing_daily_processed.csv\"), [Delimiter=\",\", Columns=15, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"dteday\", type date}, {\"season_label\", type text}, {\"year_label\", type text}, {\"month_label\", type text}, {\"weekday_label\", type text}, {\"holiday\", Int64.Type}, {\"workingday\", Int64.Type}, {\"weather_label\", type text}, {\"temp_actual\", type number}, {\"atemp_actual\", type number}, {\"hum_actual\", type number}, {\"wind_actual\", type number}, {\"casual\", Int64.Type}, {\"registered\", Int64.Type}, {\"cnt\", Int64.Type}})",
                 "in",
@@ -221,7 +221,7 @@
               "type": "m",
               "expression": [
                 "let",
-                "    Source = Csv.Document(File.Contents(\"D:\\\\fods\\\\review -2\\\\dashboard_exports\\\\bike_sharing_hourly_processed.csv\"), [Delimiter=\",\", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    Source = Csv.Document(Web.Contents(\"https://raw.githubusercontent.com/Ganesh2006646/foundations-of-data-science/main/review%20-2/dashboard_exports/bike_sharing_hourly_processed.csv\"), [Delimiter=\",\", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"dteday\", type date}, {\"hr\", Int64.Type}, {\"time_period\", type text}, {\"season_label\", type text}, {\"year_label\", type text}, {\"month_label\", type text}, {\"weekday_label\", type text}, {\"holiday\", Int64.Type}, {\"workingday\", Int64.Type}, {\"weather_label\", type text}, {\"temp_actual\", type number}, {\"atemp_actual\", type number}, {\"hum_actual\", type number}, {\"wind_actual\", type number}, {\"casual\", Int64.Type}, {\"registered\", Int64.Type}, {\"cnt\", Int64.Type}})",
                 "in",
@@ -273,7 +273,7 @@
               "type": "m",
               "expression": [
                 "let",
-                "    Source = Csv.Document(File.Contents(\"D:\\\\fods\\\\review -2\\\\dashboard_exports\\\\model_predictions.csv\"), [Delimiter=\",\", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    Source = Csv.Document(Web.Contents(\"https://raw.githubusercontent.com/Ganesh2006646/foundations-of-data-science/main/review%20-2/dashboard_exports/model_predictions.csv\"), [Delimiter=\",\", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Actual_Rentals\", Int64.Type}, {\"Linear_Regression\", type number}, {\"Random_Forest\", type number}, {\"Gradient_Boosting\", type number}, {\"Residual_RF\", type number}})",
                 "in",
@@ -361,13 +361,68 @@
             "formatString": "#,##0"
           },
           {
+            "name": "Hourly Total Rentals",
+            "expression": "SUM(Hourly_Analytics[cnt])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Hourly Casual Rentals",
+            "expression": "SUM(Hourly_Analytics[casual])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Hourly Registered Rentals",
+            "expression": "SUM(Hourly_Analytics[registered])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Average Temperature",
+            "expression": "AVERAGE(Daily_Analytics[temp_actual])",
+            "formatString": "0.0 °C"
+          },
+          {
+            "name": "Average Humidity",
+            "expression": "AVERAGE(Daily_Analytics[hum_actual])",
+            "formatString": "0.0"
+          },
+          {
+            "name": "Average Wind Speed",
+            "expression": "AVERAGE(Daily_Analytics[wind_actual])",
+            "formatString": "0.0 km/h"
+          },
+          {
+            "name": "Average Actual Rentals",
+            "expression": "AVERAGE(ML_Predictions[Actual_Rentals])",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "Average RF Prediction",
+            "expression": "AVERAGE(ML_Predictions[Random_Forest])",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "Average GB Prediction",
+            "expression": "AVERAGE(ML_Predictions[Gradient_Boosting])",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "Average LR Prediction",
+            "expression": "AVERAGE(ML_Predictions[Linear_Regression])",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "Average RF Residual",
+            "expression": "AVERAGE(ML_Predictions[Residual_RF])",
+            "formatString": "#,##0.0"
+          },
+          {
             "name": "Model MAE (Random Forest)",
             "expression": "AVERAGEX(ML_Predictions, ABS(ML_Predictions[Residual_RF]))",
             "formatString": "#,##0.0"
           },
           {
             "name": "Model R2 Score (RF)",
-            "expression": "0.887",
+            "expression": "VAR MeanActual = AVERAGEX(ALL(ML_Predictions), ML_Predictions[Actual_Rentals]) VAR SSResidual = SUMX(ML_Predictions, POWER(ML_Predictions[Actual_Rentals] - ML_Predictions[Random_Forest], 2)) VAR SSTotal = SUMX(ML_Predictions, POWER(ML_Predictions[Actual_Rentals] - MeanActual, 2)) RETURN 1 - DIVIDE(SSResidual, SSTotal)",
             "formatString": "0.000"
           }
         ]

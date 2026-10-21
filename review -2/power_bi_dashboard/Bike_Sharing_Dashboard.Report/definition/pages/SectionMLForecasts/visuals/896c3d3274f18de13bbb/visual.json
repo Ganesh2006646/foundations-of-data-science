@@ -1,0 +1,184 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "896c3d3274f18de13bbb",
+  "position": {
+    "x": 640,
+    "y": 524,
+    "z": 4000,
+    "height": 166,
+    "width": 620,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ML_Predictions"
+                    }
+                  },
+                  "Property": "Actual_Rentals"
+                }
+              },
+              "queryRef": "ML_Predictions.Actual_Rentals",
+              "nativeQueryRef": "Actual_Rentals"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ML_Predictions"
+                    }
+                  },
+                  "Property": "Random_Forest"
+                }
+              },
+              "queryRef": "ML_Predictions.Random_Forest",
+              "nativeQueryRef": "Random_Forest"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ML_Predictions"
+                    }
+                  },
+                  "Property": "Gradient_Boosting"
+                }
+              },
+              "queryRef": "ML_Predictions.Gradient_Boosting",
+              "nativeQueryRef": "Gradient_Boosting"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ML_Predictions"
+                    }
+                  },
+                  "Property": "Linear_Regression"
+                }
+              },
+              "queryRef": "ML_Predictions.Linear_Regression",
+              "nativeQueryRef": "Linear_Regression"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ML_Predictions"
+                    }
+                  },
+                  "Property": "Residual_RF"
+                }
+              },
+              "queryRef": "ML_Predictions.Residual_RF",
+              "nativeQueryRef": "Residual_RF"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Prediction evidence table'"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
