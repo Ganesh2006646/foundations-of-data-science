@@ -71,6 +71,26 @@ HYPOTHESES = [
     {"id": 6, "decision": "User mix depends on day type", "test": "Chi-square independence", "null": "User type and day type are independent", "stat": "χ² = 3051.8", "p": "< 1 × 10⁻³⁰⁰", "verdict": "Reject H₀"},
 ]
 
+POWER_BI_MANIFEST = {
+    "status": "integration-ready",
+    "project_name": "Bike Sharing Dashboard",
+    "repository_url": "https://github.com/Ganesh2006646/foundations-of-data-science/tree/main/review%20-2/power_bi_dashboard",
+    "project_file_url": "https://github.com/Ganesh2006646/foundations-of-data-science/blob/main/review%20-2/power_bi_dashboard/Bike_Sharing_Dashboard.pbip",
+    "semantic_model_url": "https://github.com/Ganesh2006646/foundations-of-data-science/blob/main/review%20-2/power_bi_dashboard/Bike_Sharing_Dashboard.SemanticModel/model.bim",
+    "dax_library_url": "https://github.com/Ganesh2006646/foundations-of-data-science/blob/main/review%20-2/power_bi_dashboard/DAX_Measures.dax",
+    "tables": ["Daily_Analytics", "Hourly_Analytics", "ML_Predictions", "Key_Measures"],
+    "semantic_measures": 12,
+    "dax_library_measures": 23,
+    "report_pages": 4,
+    "native_visuals": 0,
+    "feeds": {
+        "daily": "/api/powerbi/daily.csv",
+        "hourly": "/api/powerbi/hourly.csv",
+        "predictions": "/api/powerbi/predictions.csv"
+    },
+    "note": "Backend feeds and the semantic project are available. Replace the PBIP's local File.Contents sources with the web feeds, then author the native report visuals in Power BI Desktop."
+}
+
 
 def filtered(rows: list[dict], query: dict[str, list[str]], apply_min_demand: bool = True) -> list[dict]:
     year = query.get("year", ["all"])[0]
@@ -187,12 +207,20 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(HYPOTHESES)
         if path == "/api/models":
             return self.send_json({"metrics": model_metrics(), "predictions": PREDICTIONS})
+        if path == "/api/powerbi/manifest":
+            return self.send_json(POWER_BI_MANIFEST)
         if path == "/api/bi/daily.csv":
             return self.send_csv(filtered(DAILY, query), "bike_sharing_daily_filtered.csv")
         if path == "/api/bi/hourly.csv":
             return self.send_csv(filtered(HOURLY, query, apply_min_demand=False), "bike_sharing_hourly_filtered.csv")
         if path == "/api/bi/predictions.csv":
             return self.send_csv(PREDICTIONS, "model_predictions.csv")
+        if path == "/api/powerbi/daily.csv":
+            return self.send_csv(filtered(DAILY, query), "powerbi_daily_analytics.csv")
+        if path == "/api/powerbi/hourly.csv":
+            return self.send_csv(filtered(HOURLY, query, apply_min_demand=False), "powerbi_hourly_analytics.csv")
+        if path == "/api/powerbi/predictions.csv":
+            return self.send_csv(PREDICTIONS, "powerbi_model_predictions.csv")
         self.serve_static(path)
 
     def serve_static(self, request_path: str) -> None:

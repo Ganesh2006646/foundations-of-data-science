@@ -59,6 +59,7 @@ async function getStaticJSON(path) {
   if(endpoint==="questions")return staticAsset("questions");
   if(endpoint==="hypotheses")return staticAsset("hypotheses");
   if(endpoint==="models")return staticAsset("models");
+  if(endpoint==="manifest")return staticAsset("powerbi");
   if(endpoint==="daily")return filterStatic(await staticAsset("daily"),params,true);
   if(endpoint==="hourly")return filterStatic(await staticAsset("hourly"),params,false);
   if(endpoint==="summary"){
@@ -266,6 +267,10 @@ function renderModels() {
   $("#model-note").textContent=metric==="r2"?"Gradient Boosting explains the most variance; Random Forest is close behind.":metric==="mae"?"Random Forest has the lowest average absolute miss: 439 bikes.":"Gradient Boosting has the lowest penalty on large errors in the exported holdout set.";
 }
 
+function renderPowerBI(manifest){
+  $("#pbi-tables").textContent=manifest.tables.length;$("#pbi-measures").textContent=manifest.semantic_measures;$("#pbi-pages").textContent=manifest.report_pages;$("#pbi-visuals").textContent=manifest.native_visuals;$("#pbi-project").href=manifest.repository_url;
+}
+
 async function refresh() {
   try {
     const q=query();
@@ -276,8 +281,8 @@ async function refresh() {
 
 async function init() {
   try {
-    const [questions,tests,models]=await Promise.all([getJSON("/api/questions"),getJSON("/api/hypotheses"),getJSON("/api/models")]);
-    state.questions=questions;state.models=models.metrics;renderQuestions();renderTests(tests);renderModels();await refresh();
+    const [questions,tests,models,powerbi]=await Promise.all([getJSON("/api/questions"),getJSON("/api/hypotheses"),getJSON("/api/models"),getJSON("/api/powerbi/manifest")]);
+    state.questions=questions;state.models=models.metrics;renderQuestions();renderTests(tests);renderModels();renderPowerBI(powerbi);await refresh();
     ["year-filter","season-filter","weather-filter","day-filter"].forEach(id=>$("#"+id).addEventListener("change",refresh));
     ["date-from","date-to","demand-min"].forEach(id=>$("#"+id).addEventListener("change",refresh));
     $("#demand-min").addEventListener("input",()=>$("#demand-output").textContent=`${fmt.format(+$("#demand-min").value)} bikes`);

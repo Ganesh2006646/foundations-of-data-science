@@ -25,6 +25,10 @@ No package installation is required. The server uses Python's standard library a
 | `/api/questions` | 15 analysis questions, findings, and decisions |
 | `/api/hypotheses` | Six formal test results |
 | `/api/models` | Recalculated holdout metrics and predictions |
+| `/api/powerbi/manifest` | Power BI project, semantic-model, DAX, page, and feed contract |
+| `/api/powerbi/daily.csv` | Filter-aware Power BI daily table |
+| `/api/powerbi/hourly.csv` | Filter-aware Power BI hourly table |
+| `/api/powerbi/predictions.csv` | Power BI model-audit table |
 | `/api/bi/daily.csv` | Power BI/Tableau daily feed |
 | `/api/bi/hourly.csv` | Power BI/Tableau hourly feed |
 | `/api/bi/predictions.csv` | Model audit feed |

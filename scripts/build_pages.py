@@ -42,6 +42,7 @@ def main() -> None:
         "questions": server.QUESTIONS,
         "hypotheses": server.HYPOTHESES,
         "models": {"metrics": server.model_metrics(), "predictions": server.PREDICTIONS},
+        "powerbi": server.POWER_BI_MANIFEST,
     }
     for name, payload in payloads.items():
         (DATA / f"{name}.json").write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
