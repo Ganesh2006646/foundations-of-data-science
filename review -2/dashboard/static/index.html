@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive Capital Bikeshare demand case study with EDA, hypothesis tests, ML validation, and BI exports.">
+  <title>CycleScope — Bike Demand Intelligence</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#overview" aria-label="CycleScope home"><span class="brand-mark">C</span><span>CycleScope</span></a>
+    <nav aria-label="Main navigation">
+      <a class="active" href="#overview">Overview</a><a href="#admin">Ops console</a><a href="#analysis">15 analyses</a><a href="#evidence">Evidence</a><a href="#model">Model</a><a href="#bi">BI bridge</a>
+    </nav>
+    <span class="live-pill"><i></i> API live</span>
+  </header>
+
+  <main>
+    <section class="hero" id="overview">
+      <div class="eyebrow">Foundations of Data Science · Review 2</div>
+      <div class="hero-grid">
+        <div>
+          <h1>From trip records to <em>fleet decisions.</em></h1>
+          <p class="lede">A decision-first study of 3.29 million Capital Bikeshare rentals—combining rigorous EDA, statistical proof, and interpretable demand forecasting.</p>
+          <div class="hero-actions"><a class="button primary" href="#analysis">Explore the evidence <span>→</span></a><a class="button ghost" id="download-bi" href="/api/bi/daily.csv">Download BI data</a></div>
+        </div>
+        <div class="hero-proof">
+          <div class="proof-ring"><span>64.4%</span><small>YoY growth</small></div>
+          <p><b>Decision signal</b><br>Scale capacity for structural growth while matching rebalancing schedules to commuter peaks and weather risk.</p>
+        </div>
+      </div>
+      <div class="source-strip"><span>Real-world source</span><b>Capital Bikeshare · Washington D.C.</b><span>731 days</span><span>17,379 hourly observations</span><span>2011–2012</span></div>
+    </section>
+
+    <section class="filter-dock" aria-label="Dashboard filters">
+      <div><span class="dock-label">Analysis lens</span><b id="filter-status">All 731 days</b></div>
+      <label>Year<select id="year-filter"><option value="all">Both years</option><option>2011</option><option>2012</option></select></label>
+      <label>Season<select id="season-filter"><option value="all">All seasons</option><option>Spring</option><option>Summer</option><option>Fall</option><option>Winter</option></select></label>
+      <label>Weather<select id="weather-filter"><option value="all">All weather</option><option>Clear</option><option>Mist/Cloudy</option><option>Light Rain/Snow</option></select></label>
+      <label>Day type<select id="day-filter"><option value="all">Every day</option><option value="working">Working days</option><option value="off">Weekend / holiday</option></select></label>
+      <button class="reset" id="reset-filters">Reset</button>
+    </section>
+
+    <section class="section overview-section">
+      <div class="section-heading"><div><span class="section-no">01</span><p class="eyebrow">Operational pulse</p><h2>The network at a glance</h2></div><p>Every number below is recalculated by the Python backend when the analysis lens changes.</p></div>
+      <div class="quality-strip" aria-label="Preprocessing and data quality">
+        <div><span>Preprocessing 01</span><b>Parsed dates</b><small>ISO-8601 daily + hourly timeline</small></div>
+        <div><span>Preprocessing 02</span><b>0 missing · 0 duplicates</b><small>Quality audit passed on both tables</small></div>
+        <div><span>Preprocessing 03</span><b>Physical units restored</b><small>°C · % humidity · km/h wind</small></div>
+        <div><span>Preprocessing 04</span><b>Semantic features</b><small>Labels + four dispatch periods</small></div>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi accent"><span>Total rentals</span><strong id="kpi-total">—</strong><small>rides in selected period</small></article>
+        <article class="kpi"><span>Average demand</span><strong id="kpi-average">—</strong><small>rentals per day</small></article>
+        <article class="kpi"><span>Subscriber share</span><strong id="kpi-share">—</strong><small>registered riders</small></article>
+        <article class="kpi"><span>Peak day</span><strong id="kpi-peak">—</strong><small id="kpi-peak-date">highest observed volume</small></article>
+      </div>
+      <div class="chart-grid">
+        <article class="panel wide"><div class="panel-head"><div><span>Demand trajectory</span><h3>Daily rental volume</h3></div><span class="legend"><i class="coral"></i> Daily <i class="mint"></i> 30-day average</span></div><div class="chart" id="trend-chart"></div></article>
+        <article class="panel"><div class="panel-head"><div><span>Fleet rhythm</span><h3>Average demand by hour</h3></div></div><div class="chart" id="hour-chart"></div><p class="chart-note">Peaks reveal when stockouts and dock overflow are most likely.</p></article>
+      </div>
+    </section>
+
+    <section class="section admin-section" id="admin">
+      <div class="section-heading"><div><span class="section-no">02</span><p class="eyebrow">Operations console</p><h2>Inspect the exact records.</h2></div><p>Use precise administrative controls to isolate a time window, minimum demand level, or rider segment—then export exactly what is on screen.</p></div>
+      <div class="admin-shell">
+        <aside class="admin-controls">
+          <div class="console-title"><span class="console-dot"></span><div><small>Administrator view</small><b>Data controls</b></div></div>
+          <label>From date<input type="date" id="date-from" min="2011-01-01" max="2012-12-31" value="2011-01-01"></label>
+          <label>To date<input type="date" id="date-to" min="2011-01-01" max="2012-12-31" value="2012-12-31"></label>
+          <label>Minimum daily demand <output id="demand-output">0 bikes</output><input type="range" id="demand-min" min="0" max="8500" step="250" value="0"></label>
+          <label>Rider focus<select id="rider-focus"><option value="cnt">Total rentals</option><option value="registered">Registered riders</option><option value="casual">Casual riders</option></select></label>
+          <label>Find a date or label<input type="search" id="record-search" placeholder="e.g. 2012-07 or Fall"></label>
+          <a class="admin-export" id="admin-export" href="/api/bi/daily.csv">Export this view <span>↓</span></a>
+          <button class="clear-advanced" id="clear-advanced">Clear advanced controls</button>
+        </aside>
+        <div class="admin-data">
+          <div class="admin-kpis">
+            <div><span>Visible days</span><strong id="admin-days">—</strong></div>
+            <div><span>Avg. total</span><strong id="admin-total">—</strong></div>
+            <div><span>Avg. registered</span><strong id="admin-registered">—</strong></div>
+            <div><span>Avg. casual</span><strong id="admin-casual">—</strong></div>
+          </div>
+          <div class="table-head"><div><span>Record explorer</span><b id="table-caption">Daily operations log</b></div><label>Rows<select id="page-size"><option>10</option><option>20</option><option>50</option></select></label></div>
+          <div class="table-wrap"><table><thead><tr><th data-sort="dteday">Date</th><th data-sort="weekday_label">Day</th><th data-sort="season_label">Season</th><th data-sort="weather_label">Weather</th><th data-sort="temp_actual">Temp.</th><th data-sort="casual">Casual</th><th data-sort="registered">Registered</th><th data-sort="cnt">Total</th><th>Load</th></tr></thead><tbody id="records-body"></tbody></table></div>
+          <div class="pagination"><span id="page-label">Page 1</span><div><button id="page-prev" aria-label="Previous page">←</button><button id="page-next" aria-label="Next page">→</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section analysis-section" id="analysis">
+      <div class="section-heading"><div><span class="section-no">03</span><p class="eyebrow">Exploratory analysis</p><h2>15 questions. 15 decisions.</h2></div><p>Select any question to see its method, visual evidence, interpretation, and operational action.</p></div>
+      <div class="analysis-workbench">
+        <div class="question-list" id="question-list" role="tablist" aria-label="Analysis questions"></div>
+        <article class="analysis-canvas">
+          <div class="analysis-title"><div><span id="question-number">Question 01</span><h3 id="question-title">—</h3></div><span class="method-pill" id="question-method">Grouped mean</span></div>
+          <div class="analysis-chart" id="analysis-chart"></div>
+          <div class="interpretation-grid">
+            <div><span>What the data says</span><p id="question-finding">—</p></div>
+            <div class="decision"><span>Decision</span><p id="question-decision">—</p></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section evidence-section" id="evidence">
+      <div class="section-heading"><div><span class="section-no">04</span><p class="eyebrow">Statistical proof</p><h2>Decisions that survive a test</h2></div><p>At α = 0.05, all six tests reject their null hypothesis. Statistical significance supports—not replaces—the operational interpretation.</p></div>
+      <div class="evidence-banner"><div><small>Confidence standard</small><strong>95%</strong></div><p>Six pre-defined hypotheses test growth, weather, calendar, seasonal, temperature, and user-behavior effects.</p><span>6 / 6 significant</span></div>
+      <div class="test-grid" id="test-grid"></div>
+    </section>
+
+    <section class="section model-section" id="model">
+      <div class="section-heading"><div><span class="section-no">05</span><p class="eyebrow">Predictive validation</p><h2>ML is the supporting actor.</h2></div><p>The project remains analysis-led. Regression is used only to test whether the discovered calendar and environmental signals can predict continuous fleet demand.</p></div>
+      <div class="model-layout">
+        <article class="model-choice"><span class="choice-tag">Operational choice</span><h3>Random Forest</h3><p>Selected for the lowest holdout MAE—about <b>439 bikes</b>—plus natural handling of nonlinear thresholds and clear feature importance.</p><div class="model-score"><strong>0.884</strong><span>Holdout R²<br><small>147 unseen days</small></span></div><ul><li>No target leakage: <code>casual</code> and <code>registered</code> excluded</li><li>80/20 train-test split with fixed seed</li><li>Compared against linear and boosted baselines</li></ul></article>
+        <article class="panel model-panel"><div class="panel-head"><div><span>Transparent benchmark</span><h3>Accuracy vs. operational error</h3></div><div class="metric-switch"><button class="active" data-metric="r2">R²</button><button data-metric="mae">MAE</button><button data-metric="rmse">RMSE</button></div></div><div class="chart" id="model-chart"></div><p class="chart-note" id="model-note">Gradient Boosting has the highest R²; Random Forest wins on absolute bike-count error.</p></article>
+      </div>
+    </section>
+
+    <section class="section bi-section" id="bi">
+      <div class="section-heading"><div><span class="section-no">06</span><p class="eyebrow">Full-stack + BI bridge</p><h2>One backend. Three consumers.</h2></div><p>The same cleaned data powers this web app and exposes refreshable CSV endpoints for Power BI or Tableau Desktop.</p></div>
+      <div class="pipeline" aria-label="Data pipeline"><div><span>01</span><b>UCI source</b><small>day.csv · hour.csv</small></div><i>→</i><div><span>02</span><b>Python API</b><small>filters · summaries · exports</small></div><i>→</i><div><span>03</span><b>Decision layer</b><small>Web · Power BI · Tableau</small></div></div>
+      <div class="bi-grid">
+        <article><span>Power BI / Tableau endpoint</span><code id="daily-url">http://127.0.0.1:8000/api/bi/daily.csv</code><button class="copy" data-copy="daily-url">Copy URL</button><p>Use <b>Get Data → Web</b> in Power BI, or connect to the CSV URL in Tableau while this backend is running.</p></article>
+        <article><span>Hourly operations endpoint</span><code id="hourly-url">http://127.0.0.1:8000/api/bi/hourly.csv</code><button class="copy" data-copy="hourly-url">Copy URL</button><p>Build hour × weekday heatmaps, working-day peak comparisons, and dispatch-time reports.</p></article>
+        <article><span>Model audit endpoint</span><code id="model-url">http://127.0.0.1:8000/api/bi/predictions.csv</code><button class="copy" data-copy="model-url">Copy URL</button><p>Compare actual demand with all three holdout prediction series—no black-box screenshot required.</p></article>
+      </div>
+    </section>
+
+    <section class="conclusion">
+      <p class="eyebrow">Final decision</p><h2>Scale the fleet, but operate it by rhythm.</h2><p>Demand growth is real and statistically decisive. Capacity should expand for the higher 2012 baseline, while daily execution follows three reliable signals: commuter peaks, seasonal temperature comfort, and adverse-weather suppression. Use Random Forest as a planning aid—not as a substitute for the evidence.</p><div><span>Expand capacity</span><span>Pre-stage at 07:30 & 16:30</span><span>Weather-adjust shifts</span><span>Convert weekend casuals</span></div>
+    </section>
+  </main>
+  <footer><span>CycleScope · FODS Review 2</span><span>Source: UCI Machine Learning Repository · DOI 10.24432/C5W894</span><span id="footer-status">Backend connected</span></footer>
+  <div class="toast" id="toast" role="status">Copied to clipboard</div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

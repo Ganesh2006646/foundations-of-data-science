@@ -66,9 +66,19 @@ D:\fods\
   3. Formulated **7 operational decisions** for fleet allocation and dock rebalancing
   4. **6 Formal Hypothesis Tests** (Welch's $t$-test, One-way ANOVA, Pearson correlation, Chi-square test of independence)
   5. **Supervised Regression ML Validation** (Random Forest Regressor achieving $R^2 \approx 0.89$, MAE $\approx 439$ bikes)
-  6. **Interactive Power BI Dashboard Project (`.pbip`):** Native project with semantic data model, DAX measures, batch launcher, and standalone HTML preview
+  6. **Interactive Dashboard Integration:** Full-stack analytics dashboard plus a native Power BI (`.pbip`) project with semantic model and DAX measures
   7. **Deliverables:**
      - Notebook: [`review -2/Bike_Sharing_Case_Study.ipynb`](review%20-2/Bike_Sharing_Case_Study.ipynb)
+     - Full-Stack Dashboard: [`review -2/dashboard/`](review%20-2/dashboard/)
      - Power BI Project: [`review -2/power_bi_dashboard/`](review%20-2/power_bi_dashboard/)
      - Presentation PPT: [`review -2/presentation/Bike_Sharing_Demand_Case_Study_Presentation.pptx`](review%20-2/presentation/Bike_Sharing_Demand_Case_Study_Presentation.pptx)
      - Report: [`review -2/reports/Bike_Sharing_Demand_Case_Study_Report.md`](review%20-2/reports/Bike_Sharing_Demand_Case_Study_Report.md)
+     - Clean BI Datasets: [`review -2/dashboard_exports/`](review%20-2/dashboard_exports/)
+
+## Run the Review 2 full-stack dashboard
+
+```powershell
+python "review -2/dashboard/server.py"
+```
+
+Open `http://127.0.0.1:8000`. It includes filter-aware EDA, 15 visual analyses, statistical evidence, ML benchmarking, and refreshable Power BI/Tableau CSV endpoints.
