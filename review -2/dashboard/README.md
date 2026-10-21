@@ -41,8 +41,6 @@ http://127.0.0.1:8000/api/bi/daily.csv?year=2012&season=Fall
 
 In Power BI Desktop, choose **Get Data → Web**, paste an endpoint URL, and select **Load**. In Tableau Desktop, use the text/CSV connector with the downloaded endpoint result or a web-data connector workflow.
 
-When deployed, replace `http://127.0.0.1:8000` with the production Vercel URL. The dashboard automatically displays production endpoint URLs in its BI Bridge section.
-
 ## Scope
 
 The application deliberately remains an analysis-led FODS case study. The machine-learning section is a bounded regression benchmark used to validate discovered patterns, not the main project.

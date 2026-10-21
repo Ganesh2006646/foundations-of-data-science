@@ -187,10 +187,6 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         query = parse_qs(parsed.query)
         path = parsed.path
-        # Vercel rewrites all API requests to one Python function and forwards
-        # the original endpoint in a query parameter.
-        if query.get("endpoint"):
-            path = "/api/" + query["endpoint"][0].lstrip("/")
         if path == "/api/health":
             return self.send_json({"status": "ok", "daily_rows": len(DAILY), "hourly_rows": len(HOURLY)})
         if path == "/api/meta":
