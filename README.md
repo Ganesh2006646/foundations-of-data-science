@@ -4,6 +4,12 @@
 **Register Number:** [Your Register Number]  
 **Department:** Computer Science & Engineering  
 
+## Live Review 2 Dashboard
+
+### [Open CycleScope — Bike Demand Intelligence](https://suhas2006-code.github.io/cycloscope-fods-review-2/)
+
+Interactive EDA, 15 analytical questions, hypothesis testing, ML validation, administrative controls, and Power BI integration.
+
 ---
 
 ## 📁 Repository Organization
