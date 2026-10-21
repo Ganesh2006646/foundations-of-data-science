@@ -1,34 +1,61 @@
 {
-  "config": "{\"version\": \"5.50\", \"themeCollection\": {\"baseTheme\": {\"name\": \"CY24SU02\", \"version\": \"5.50\", \"type\": 2}}, \"activeSectionIndex\": 0, \"defaultDrillFilterOtherVisuals\": true}",
+  "config": "{\"version\":\"5.66\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU02\",\"type\":2,\"version\":{\"visual\":\"1.8.86\",\"report\":\"2.0.86\",\"page\":\"1.3.86\"}}},\"activeSectionIndex\":3,\"defaultDrillFilterOtherVisuals\":true,\"linguisticSchemaSyncVersion\":2,\"objects\":{\"outspacePane\":[{\"properties\":{\"expanded\":{\"expr\":{\"Literal\":{\"Value\":\"false\"}}}}}]}}",
   "layoutOptimization": 0,
+  "resourcePackages": [
+    {
+      "resourcePackage": {
+        "disabled": false,
+        "items": [
+          {
+            "name": "CY24SU02",
+            "path": "BaseThemes/CY24SU02.json",
+            "type": 202
+          }
+        ],
+        "name": "SharedResources",
+        "type": 2
+      }
+    }
+  ],
   "sections": [
     {
-      "name": "Section_Executive_Overview",
-      "displayName": "1. Executive Overview & KPIs",
-      "width": 1280.0,
-      "height": 720.0,
-      "visualContainers": []
-    },
-    {
-      "name": "Section_Commuter_Dynamics",
+      "config": "{}",
       "displayName": "2. Commuter vs Leisure Dynamics",
-      "width": 1280.0,
-      "height": 720.0,
-      "visualContainers": []
+      "displayOption": 0,
+      "height": 720.00,
+      "name": "Section_Commuter_Dynamics",
+      "ordinal": 1,
+      "visualContainers": [],
+      "width": 1280.00
     },
     {
-      "name": "Section_Weather_Impact",
-      "displayName": "3. Weather & Environmental Drivers",
-      "width": 1280.0,
-      "height": 720.0,
-      "visualContainers": []
+      "config": "{}",
+      "displayName": "1. Executive Overview & KPIs",
+      "displayOption": 0,
+      "height": 720.00,
+      "name": "Section_Executive_Overview",
+      "visualContainers": [],
+      "width": 1280.00
     },
     {
-      "name": "Section_ML_Forecasts",
+      "config": "{}",
       "displayName": "4. ML Predictions & Demand Forecast",
-      "width": 1280.0,
-      "height": 720.0,
-      "visualContainers": []
+      "displayOption": 0,
+      "height": 720.00,
+      "name": "Section_ML_Forecasts",
+      "ordinal": 3,
+      "visualContainers": [],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "3. Weather & Environmental Drivers",
+      "displayOption": 0,
+      "height": 720.00,
+      "name": "Section_Weather_Impact",
+      "ordinal": 2,
+      "visualContainers": [],
+      "width": 1280.00
     }
   ]
 }
