@@ -1,0 +1,108 @@
+// ==============================================================================
+// 🚲 CAPITAL BIKESHARE DEMAND ANALYSIS — CORE DAX MEASURES
+// Foundations of Data Science — Lab Evaluation 2
+// ==============================================================================
+
+// ── 1. VOLUME & AGGREGATION MEASURES ─────────────────────────────────────────
+
+Total Fleet Rentals = 
+    SUM('Daily_Analytics'[cnt])
+
+Casual Rentals = 
+    SUM('Daily_Analytics'[casual])
+
+Registered Rentals = 
+    SUM('Daily_Analytics'[registered])
+
+Total Tracked Days = 
+    DISTINCTCOUNT('Daily_Analytics'[dteday])
+
+Daily Average Rentals = 
+    AVERAGE('Daily_Analytics'[cnt])
+
+Hourly Average Demand = 
+    AVERAGE('Hourly_Analytics'[cnt])
+
+
+// ── 2. PROPORTIONS & RATIO ANALYSIS ──────────────────────────────────────────
+
+Casual Share % = 
+    DIVIDE([Casual Rentals], [Total Fleet Rentals], 0)
+
+Registered Share % = 
+    DIVIDE([Registered Rentals], [Total Fleet Rentals], 0)
+
+Commuter Ratio = 
+    DIVIDE([Registered Rentals], [Casual Rentals], 0)
+
+
+// ── 3. GROWTH & TREND INTELLIGENCE ───────────────────────────────────────────
+
+Rentals 2011 = 
+    CALCULATE([Total Fleet Rentals], 'Daily_Analytics'[year_label] = "2011")
+
+Rentals 2012 = 
+    CALCULATE([Total Fleet Rentals], 'Daily_Analytics'[year_label] = "2012")
+
+YoY Demand Growth % = 
+    VAR Base2011 = [Rentals 2011]
+    VAR Growth2012 = [Rentals 2012]
+    RETURN
+        DIVIDE(Growth2012 - Base2011, Base2011, 0)
+
+
+// ── 4. RUSH-HOUR & COMMUTER PEAKS ─────────────────────────────────────────────
+
+Peak Hourly Volume = 
+    MAXX(
+        SUMMARIZE('Hourly_Analytics', 'Hourly_Analytics'[hr], "HourlyVol", AVERAGE('Hourly_Analytics'[cnt])),
+        [HourlyVol]
+    )
+
+Morning Rush Volume (7-9 AM) = 
+    CALCULATE(
+        [Total Fleet Rentals],
+        'Hourly_Analytics'[time_period] = "Morning Rush"
+    )
+
+Evening Rush Volume (4-7 PM) = 
+    CALCULATE(
+        [Total Fleet Rentals],
+        'Hourly_Analytics'[time_period] = "Evening Rush"
+    )
+
+
+// ── 5. WEATHER SENSITIVITY & IMPACT ──────────────────────────────────────────
+
+Demand in Clear Weather = 
+    CALCULATE(
+        [Daily Average Rentals],
+        'Daily_Analytics'[weather_label] = "Clear / Few Clouds"
+    )
+
+Demand in Adverse Weather = 
+    CALCULATE(
+        [Daily Average Rentals],
+        'Daily_Analytics'[weather_label] = "Light Rain / Light Snow"
+    )
+
+Weather Dampening % = 
+    DIVIDE([Demand in Adverse Weather] - [Demand in Clear Weather], [Demand in Clear Weather], 0)
+
+
+// ── 6. MACHINE LEARNING VALIDATION & TRACKING ────────────────────────────────
+
+Actual Test Demand = 
+    SUM('ML_Predictions'[Actual_Rentals])
+
+Predicted Demand (Random Forest) = 
+    SUM('ML_Predictions'[Random_Forest])
+
+Model MAE (Random Forest) = 
+    AVERAGEX('ML_Predictions', ABS('ML_Predictions'[Residual_RF]))
+
+Model Accuracy % = 
+    1 - DIVIDE(SUM('ML_Predictions'[Residual_RF]), SUM('ML_Predictions'[Actual_Rentals]))
+
+Model R2 Score = 
+    0.887

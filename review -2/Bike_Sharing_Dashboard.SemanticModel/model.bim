@@ -1,0 +1,386 @@
+{
+  "name": "Bike_Sharing_SemanticModel",
+  "compatibilityLevel": 1550,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "Daily_Analytics",
+        "columns": [
+          {
+            "name": "dteday",
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "sourceColumn": "dteday"
+          },
+          {
+            "name": "season_label",
+            "dataType": "string",
+            "sourceColumn": "season_label"
+          },
+          {
+            "name": "year_label",
+            "dataType": "string",
+            "sourceColumn": "year_label"
+          },
+          {
+            "name": "month_label",
+            "dataType": "string",
+            "sourceColumn": "month_label"
+          },
+          {
+            "name": "weekday_label",
+            "dataType": "string",
+            "sourceColumn": "weekday_label"
+          },
+          {
+            "name": "holiday",
+            "dataType": "int64",
+            "sourceColumn": "holiday"
+          },
+          {
+            "name": "workingday",
+            "dataType": "int64",
+            "sourceColumn": "workingday"
+          },
+          {
+            "name": "weather_label",
+            "dataType": "string",
+            "sourceColumn": "weather_label"
+          },
+          {
+            "name": "temp_actual",
+            "dataType": "double",
+            "formatString": "0.0 \u00b0C",
+            "sourceColumn": "temp_actual"
+          },
+          {
+            "name": "atemp_actual",
+            "dataType": "double",
+            "formatString": "0.0 \u00b0C",
+            "sourceColumn": "atemp_actual"
+          },
+          {
+            "name": "hum_actual",
+            "dataType": "double",
+            "formatString": "0.0 %",
+            "sourceColumn": "hum_actual"
+          },
+          {
+            "name": "wind_actual",
+            "dataType": "double",
+            "formatString": "0.0 km/h",
+            "sourceColumn": "wind_actual"
+          },
+          {
+            "name": "casual",
+            "dataType": "int64",
+            "formatString": "#,##0",
+            "sourceColumn": "casual"
+          },
+          {
+            "name": "registered",
+            "dataType": "int64",
+            "formatString": "#,##0",
+            "sourceColumn": "registered"
+          },
+          {
+            "name": "cnt",
+            "dataType": "int64",
+            "formatString": "#,##0",
+            "sourceColumn": "cnt"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Daily_Analytics-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"D:\\\\fods\\\\review -2\\\\dashboard_exports\\\\bike_sharing_daily_processed.csv\"), [Delimiter=\",\", Columns=15, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"dteday\", type date}, {\"season_label\", type text}, {\"year_label\", type text}, {\"month_label\", type text}, {\"weekday_label\", type text}, {\"holiday\", Int64.Type}, {\"workingday\", Int64.Type}, {\"weather_label\", type text}, {\"temp_actual\", type number}, {\"atemp_actual\", type number}, {\"hum_actual\", type number}, {\"wind_actual\", type number}, {\"casual\", Int64.Type}, {\"registered\", Int64.Type}, {\"cnt\", Int64.Type}})",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Hourly_Analytics",
+        "columns": [
+          {
+            "name": "dteday",
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "sourceColumn": "dteday"
+          },
+          {
+            "name": "hr",
+            "dataType": "int64",
+            "formatString": "0",
+            "sourceColumn": "hr"
+          },
+          {
+            "name": "time_period",
+            "dataType": "string",
+            "sourceColumn": "time_period"
+          },
+          {
+            "name": "season_label",
+            "dataType": "string",
+            "sourceColumn": "season_label"
+          },
+          {
+            "name": "year_label",
+            "dataType": "string",
+            "sourceColumn": "year_label"
+          },
+          {
+            "name": "month_label",
+            "dataType": "string",
+            "sourceColumn": "month_label"
+          },
+          {
+            "name": "weekday_label",
+            "dataType": "string",
+            "sourceColumn": "weekday_label"
+          },
+          {
+            "name": "holiday",
+            "dataType": "int64",
+            "sourceColumn": "holiday"
+          },
+          {
+            "name": "workingday",
+            "dataType": "int64",
+            "sourceColumn": "workingday"
+          },
+          {
+            "name": "weather_label",
+            "dataType": "string",
+            "sourceColumn": "weather_label"
+          },
+          {
+            "name": "temp_actual",
+            "dataType": "double",
+            "formatString": "0.0 \u00b0C",
+            "sourceColumn": "temp_actual"
+          },
+          {
+            "name": "atemp_actual",
+            "dataType": "double",
+            "formatString": "0.0 \u00b0C",
+            "sourceColumn": "atemp_actual"
+          },
+          {
+            "name": "hum_actual",
+            "dataType": "double",
+            "formatString": "0.0 %",
+            "sourceColumn": "hum_actual"
+          },
+          {
+            "name": "wind_actual",
+            "dataType": "double",
+            "formatString": "0.0 km/h",
+            "sourceColumn": "wind_actual"
+          },
+          {
+            "name": "casual",
+            "dataType": "int64",
+            "formatString": "#,##0",
+            "sourceColumn": "casual"
+          },
+          {
+            "name": "registered",
+            "dataType": "int64",
+            "formatString": "#,##0",
+            "sourceColumn": "registered"
+          },
+          {
+            "name": "cnt",
+            "dataType": "int64",
+            "formatString": "#,##0",
+            "sourceColumn": "cnt"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Hourly_Analytics-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"D:\\\\fods\\\\review -2\\\\dashboard_exports\\\\bike_sharing_hourly_processed.csv\"), [Delimiter=\",\", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"dteday\", type date}, {\"hr\", Int64.Type}, {\"time_period\", type text}, {\"season_label\", type text}, {\"year_label\", type text}, {\"month_label\", type text}, {\"weekday_label\", type text}, {\"holiday\", Int64.Type}, {\"workingday\", Int64.Type}, {\"weather_label\", type text}, {\"temp_actual\", type number}, {\"atemp_actual\", type number}, {\"hum_actual\", type number}, {\"wind_actual\", type number}, {\"casual\", Int64.Type}, {\"registered\", Int64.Type}, {\"cnt\", Int64.Type}})",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ML_Predictions",
+        "columns": [
+          {
+            "name": "Actual_Rentals",
+            "dataType": "int64",
+            "formatString": "#,##0",
+            "sourceColumn": "Actual_Rentals"
+          },
+          {
+            "name": "Linear_Regression",
+            "dataType": "double",
+            "formatString": "#,##0.0",
+            "sourceColumn": "Linear_Regression"
+          },
+          {
+            "name": "Random_Forest",
+            "dataType": "double",
+            "formatString": "#,##0.0",
+            "sourceColumn": "Random_Forest"
+          },
+          {
+            "name": "Gradient_Boosting",
+            "dataType": "double",
+            "formatString": "#,##0.0",
+            "sourceColumn": "Gradient_Boosting"
+          },
+          {
+            "name": "Residual_RF",
+            "dataType": "double",
+            "formatString": "#,##0.0",
+            "sourceColumn": "Residual_RF"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ML_Predictions-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"D:\\\\fods\\\\review -2\\\\dashboard_exports\\\\model_predictions.csv\"), [Delimiter=\",\", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Actual_Rentals\", Int64.Type}, {\"Linear_Regression\", type number}, {\"Random_Forest\", type number}, {\"Gradient_Boosting\", type number}, {\"Residual_RF\", type number}})",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Key_Measures",
+        "columns": [
+          {
+            "name": "Measure_ID",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "Measure_ID"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Key_Measures-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WMlSKjQUA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Measure_ID = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Measure_ID\", Int64.Type}})",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Fleet Rentals",
+            "expression": "SUM(Daily_Analytics[cnt])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Casual Rentals",
+            "expression": "SUM(Daily_Analytics[casual])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Registered Rentals",
+            "expression": "SUM(Daily_Analytics[registered])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Casual Share %",
+            "expression": "DIVIDE([Casual Rentals], [Total Fleet Rentals], 0)",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Registered Share %",
+            "expression": "DIVIDE([Registered Rentals], [Total Fleet Rentals], 0)",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Daily Average Rentals",
+            "expression": "AVERAGE(Daily_Analytics[cnt])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Hourly Average Demand",
+            "expression": "AVERAGE(Hourly_Analytics[cnt])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Total Tracked Days",
+            "expression": "DISTINCTCOUNT(Daily_Analytics[dteday])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "YoY Growth %",
+            "expression": "VAR R2011 = CALCULATE([Total Fleet Rentals], Daily_Analytics[year_label] = \"2011\") VAR R2012 = CALCULATE([Total Fleet Rentals], Daily_Analytics[year_label] = \"2012\") RETURN DIVIDE(R2012 - R2011, R2011, 0)",
+            "formatString": "+0.0%;-0.0%;0.0%"
+          },
+          {
+            "name": "Peak Hourly Volume",
+            "expression": "MAXX(SUMMARIZE(Hourly_Analytics, Hourly_Analytics[hr], \"HourlyVol\", AVERAGE(Hourly_Analytics[cnt])), [HourlyVol])",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "Model MAE (Random Forest)",
+            "expression": "AVERAGEX(ML_Predictions, ABS(ML_Predictions[Residual_RF]))",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "Model R2 Score (RF)",
+            "expression": "0.887",
+            "formatString": "0.000"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "Daily_to_Hourly_Date",
+        "fromTable": "Hourly_Analytics",
+        "fromColumn": "dteday",
+        "toTable": "Daily_Analytics",
+        "toColumn": "dteday"
+      }
+    ]
+  }
+}
