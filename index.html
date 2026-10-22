@@ -12,7 +12,7 @@
   <header class="topbar">
     <a class="brand" href="#overview" aria-label="CycleScope home"><span class="brand-mark">C</span><span>CycleScope</span></a>
     <nav aria-label="Main navigation">
-      <a class="active" href="#overview">Overview</a><a href="#admin">Ops console</a><a href="#analysis">15 analyses</a><a href="#evidence">Evidence</a><a href="#model">Model</a><a href="#bi">BI bridge</a>
+      <a class="active" href="#overview">Overview</a><a href="#powerbi-web">Power BI report</a><a href="#admin">Ops console</a><a href="#analysis">15 analyses</a><a href="#evidence">Evidence</a><a href="#model">Model</a><a href="#bi">BI bridge</a>
     </nav>
     <span class="live-pill"><i></i> API live</span>
   </header>
@@ -60,6 +60,21 @@
       <div class="chart-grid">
         <article class="panel wide"><div class="panel-head"><div><span>Demand trajectory</span><h3>Daily rental volume</h3></div><span class="legend"><i class="coral"></i> Daily <i class="mint"></i> 30-day average</span></div><div class="chart" id="trend-chart"></div></article>
         <article class="panel"><div class="panel-head"><div><span>Fleet rhythm</span><h3>Average demand by hour</h3></div></div><div class="chart" id="hour-chart"></div><p class="chart-note">Peaks reveal when stockouts and dock overflow are most likely.</p></article>
+      </div>
+    </section>
+
+    <section class="section pbi-web-section" id="powerbi-web">
+      <div class="section-heading"><div><span class="section-no">02</span><p class="eyebrow">Power BI dashboards · web edition</p><h2>The four report pages, now interactive online.</h2></div><p>This browser-native edition mirrors the existing PBIP report and responds to the global year, season, weather, and day-type filters above.</p></div>
+      <div class="pbi-frame">
+        <div class="pbi-toolbar"><div class="pbi-logo">P</div><div><small>BI REPORT</small><b>Bike Sharing Demand Intelligence</b></div><span id="pbi-web-filter">All dashboard data</span></div>
+        <div class="pbi-tabs" role="tablist" aria-label="Power BI report pages">
+          <button class="active" data-pbi-page="overview">1. Executive Overview &amp; KPIs</button><button data-pbi-page="commuter">2. Commuter vs Leisure</button><button data-pbi-page="weather">3. Weather &amp; Environment</button><button data-pbi-page="forecast">4. ML Predictions &amp; Forecast</button>
+        </div>
+        <div class="pbi-canvas">
+          <div class="pbi-page-head"><div><small id="pbi-kicker">EXECUTIVE OVERVIEW</small><h3 id="pbi-title">Bike Sharing Executive Overview</h3><p id="pbi-subtitle">Headline demand, growth, and the strongest operational drivers.</p></div><span class="pbi-native">WEB REPLICA · LIVE DATA</span></div>
+          <div class="pbi-kpis" id="pbi-web-kpis"></div>
+          <div class="pbi-charts"><article><h4 id="pbi-chart-a-title">Daily rental trend</h4><div id="pbi-chart-a"></div></article><article><h4 id="pbi-chart-b-title">Average demand by season</h4><div id="pbi-chart-b"></div></article></div>
+        </div>
       </div>
     </section>
 

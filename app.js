@@ -2,7 +2,7 @@ const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const NS = "http://www.w3.org/2000/svg";
 const palette = { ink: "#10231f", coral: "#f06f52", mint: "#70ad92", yellow: "#f6c453", blue: "#5e89a7", gray: "#bac1b8", paper: "#f3f0e7" };
-const state = { daily: [], hourly: [], questions: [], models: [], summary: null, selectedQuestion: 1, metric: "r2", page: 1, sort: "dteday", sortDir: -1 };
+const state = { daily: [], hourly: [], questions: [], models: [], summary: null, selectedQuestion: 1, metric: "r2", pbiPage: "overview", page: 1, sort: "dteday", sortDir: -1 };
 const STATIC_MODE = location.hostname.endsWith("github.io") || location.protocol === "file:" || document.querySelector('meta[name="deployment-mode"]')?.content === "static";
 const staticCache = {};
 
@@ -202,6 +202,31 @@ function renderOverview(summary) {
   lineChart($("#hour-chart"),[{data:hourly,color:palette.coral,width:3}],{height:270});
 }
 
+function renderPowerBIWeb() {
+  if (!state.summary) return;
+  const d=state.daily,h=state.hourly,s=state.summary,page=state.pbiPage;
+  const mean=(rows,key)=>rows.length?rows.reduce((a,r)=>a+(+r[key]),0)/rows.length:0,total=(rows,key)=>rows.reduce((a,r)=>a+(+r[key]),0);
+  const kpis=items=>$("#pbi-web-kpis").innerHTML=items.map(([label,value])=>`<div><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join("");
+  const meta={overview:["EXECUTIVE OVERVIEW","Bike Sharing Executive Overview","Headline demand, growth, and the strongest operational drivers."],commuter:["RIDER DYNAMICS","Commuter vs Leisure Dynamics","Hourly usage exposes commute peaks and the registered-versus-casual rider mix."],weather:["ENVIRONMENTAL DRIVERS","Weather & Environmental Drivers","Demand response to temperature, humidity, season, and recorded weather."],forecast:["PREDICTIVE VALIDATION","ML Predictions & Demand Forecast","A transparent model benchmark used as supporting operational evidence."]}[page];
+  $("#pbi-kicker").textContent=meta[0];$("#pbi-title").textContent=meta[1];$("#pbi-subtitle").textContent=meta[2];$("#pbi-web-filter").textContent=`${s.records} days · ${fmt.format(s.total)} rentals`;
+  $$(".pbi-tabs button").forEach(b=>b.classList.toggle("active",b.dataset.pbiPage===page));
+  if(page==="overview"){
+    kpis([["Total rentals",compact.format(s.total)],["Daily average",fmt.format(Math.round(s.daily_average))],["Registered share",`${s.registered_share}%`],["Peak day",s.peak?fmt.format(s.peak.rentals):"—"]]);
+    $("#pbi-chart-a-title").textContent="Daily rental trend";$("#pbi-chart-b-title").textContent="Average demand by season";
+    lineChart($("#pbi-chart-a"),[{data:d.map(r=>({label:r.dteday.slice(0,7),value:r.cnt})),color:palette.coral,width:2}],{height:260});barChart($("#pbi-chart-b"),groupMean(d,"season_label","cnt",["Spring","Summer","Fall","Winter"]),{height:260,valueLabels:true});
+  }else if(page==="commuter"){
+    kpis([["Hourly rentals",compact.format(total(h,"cnt"))],["Hourly average",fmt.format(Math.round(mean(h,"cnt")))],["Registered",compact.format(total(h,"registered"))],["Casual",compact.format(total(h,"casual"))]]);
+    $("#pbi-chart-a-title").textContent="Demand curve by hour and working-day status";$("#pbi-chart-b-title").textContent="Rider mix by weekday";
+    lineChart($("#pbi-chart-a"),[{data:groupMean(h.filter(r=>r.workingday===1),"hr").sort((a,b)=>a.label-b.label),color:palette.coral,width:3},{data:groupMean(h.filter(r=>r.workingday===0),"hr").sort((a,b)=>a.label-b.label),color:palette.mint,width:3}],{height:260});barChart($("#pbi-chart-b"),groupSum(h,"weekday_label",["registered","casual"]),{height:260,series:[{key:"registered",color:palette.mint},{key:"casual",color:palette.coral}]});
+  }else if(page==="weather"){
+    kpis([["Avg demand",fmt.format(Math.round(mean(d,"cnt")))],["Avg temperature",`${mean(d,"temp_actual").toFixed(1)}°C`],["Avg humidity",`${mean(d,"hum_actual").toFixed(1)}%`],["Avg wind",`${mean(d,"wind_actual").toFixed(1)} km/h`]]);
+    $("#pbi-chart-a-title").textContent="Temperature vs demand";$("#pbi-chart-b-title").textContent="Demand penalty by weather";scatterChart($("#pbi-chart-a"),d,"temp_actual","cnt");barChart($("#pbi-chart-b"),groupMean(d,"weather_label"),{height:260,valueLabels:true});
+  }else{
+    const rf=state.models.find(m=>m.name.includes("Random"))||state.models[0]||{};kpis([["Selected model","Random Forest"],["Holdout R²",(+rf.r2||.884).toFixed(3)],["MAE",fmt.format(Math.round(+rf.mae||439))],["Test days","147"]]);
+    $("#pbi-chart-a-title").textContent="Model R² comparison";$("#pbi-chart-b-title").textContent="Operational error (MAE)";barChart($("#pbi-chart-a"),state.models.map(m=>({label:m.name.split(" ")[0],value:m.r2})),{height:260,max:1,valueLabels:true,format:v=>v.toFixed(3)});barChart($("#pbi-chart-b"),state.models.map(m=>({label:m.name.split(" ")[0],value:m.mae})),{height:260,valueLabels:true});
+  }
+}
+
 function renderAdmin() {
   const search=$("#record-search").value.trim().toLowerCase();
   const rider=$("#rider-focus").value;
@@ -275,7 +300,7 @@ async function refresh() {
   try {
     const q=query();
     const [summary,daily,hourly]=await Promise.all([getJSON(`/api/summary?${q}`),getJSON(`/api/daily?${q}`),getJSON(`/api/hourly?${q}`)]);
-    state.daily=daily; state.hourly=hourly; state.summary=summary; state.page=1; renderOverview(summary); renderAdmin(); renderAnalysis();
+    state.daily=daily; state.hourly=hourly; state.summary=summary; state.page=1; renderOverview(summary); renderPowerBIWeb(); renderAdmin(); renderAnalysis();
   } catch(err) { $("#footer-status").textContent="Backend unavailable"; $("#footer-status").style.color=palette.coral; console.error(err); }
 }
 
@@ -292,6 +317,7 @@ async function init() {
     $("#clear-advanced").addEventListener("click",()=>{$("#date-from").value="2011-01-01";$("#date-to").value="2012-12-31";$("#demand-min").value=0;$("#demand-output").textContent="0 bikes";$("#rider-focus").value="cnt";$("#record-search").value="";refresh()});
     $("#reset-filters").addEventListener("click",()=>{$$(".filter-dock select").forEach(s=>s.value="all");$("#clear-advanced").click()});
     $$(".metric-switch button").forEach(b=>b.addEventListener("click",()=>{state.metric=b.dataset.metric;renderModels()}));
+    $$(".pbi-tabs button").forEach(b=>b.addEventListener("click",()=>{state.pbiPage=b.dataset.pbiPage;renderPowerBIWeb()}));
     $$(".copy").forEach(b=>b.addEventListener("click",async()=>{await navigator.clipboard.writeText($("#"+b.dataset.copy).textContent);const t=$("#toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1600)}));
     if(STATIC_MODE){
       const urls={daily:"daily",hourly:"hourly",model:"predictions"};
@@ -311,5 +337,5 @@ function downloadAdminCSV(){
   const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download="cycloscope_admin_view.csv";a.click();URL.revokeObjectURL(url);
 }
 
-window.addEventListener("resize",()=>{if(state.daily.length&&state.summary){renderOverview(state.summary);renderAnalysis();renderModels()}});
+window.addEventListener("resize",()=>{if(state.daily.length&&state.summary){renderOverview(state.summary);renderPowerBIWeb();renderAnalysis();renderModels()}});
 document.addEventListener("DOMContentLoaded",init);
